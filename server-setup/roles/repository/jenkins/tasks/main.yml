@@ -1,33 +1,15 @@
-- name: "Add jenkins yum repository"
+## リポジトリ登録
+- name: "Install jenkins yum repository"
   yum_repository:
     name: jenkins
     description: "jenkins YUM repo"
     baseurl: "http://pkg.jenkins-ci.org/redhat-stable/"
 
-- name: "Add jenkins-ci.org.key"
+- name: "Install jenkins-ci.org.key"
   rpm_key:
     key: "http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key"
 
-- name: "Install jenkins"
+## インストール
+- name: "Install Jenkins"
   yum:
     name: jenkins
-
-- name: "Start jenkins server"
-  service:
-    name: jenkins
-    state: started
-    enabled: yes
-
-- name: "Wait 300 seconds for port 8080"
-  wait_for:
-    port: 8080
-    host: jenkins-server
-
-- name: "cat /var/jenkins_home/secrets/initialAdminPassword"
-  slurp:
-    path: cat /var/jenkins_home/secrets/initialAdminPassword
-  register: slurp_file
-
-- name: "Password ↓"
-  debug:
-    msg: "{{ slurp_file.content | b64decode }}"
