@@ -1,9 +1,33 @@
-- name: "Install jenkins yum repository"
+- name: "Add jenkins yum repository"
   yum_repository:
     name: jenkins
     description: "jenkins YUM repo"
     baseurl: "http://pkg.jenkins-ci.org/redhat-stable/"
 
-- name: "Install jenkins-ci.org.key"
+- name: "Add jenkins-ci.org.key"
   rpm_key:
     key: "http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key"
+
+- name: "Install jenkins"
+  yum:
+    name: jenkins
+
+- name: "Start jenkins server"
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: "Wait 300 seconds for port 8080"
+  wait_for:
+    port: 8080
+    host: jenkins-server
+
+- name: "cat /var/jenkins_home/secrets/initialAdminPassword"
+  slurp:
+    path: cat /var/jenkins_home/secrets/initialAdminPassword
+  register: slurp_file
+
+- name: "Password ↓"
+  debug:
+    msg: "{{ slurp_file.content | b64decode }}"

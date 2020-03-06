@@ -23,5 +23,5 @@ centos-jenkins.localdomain  ← ここ
 
 ```
 $ cd server-setup
-$ playbook -i inventory/hosts playbook.yml
+$ ansible-playbook -i inventory/hosts --ask-sudo-pass playbook.yml
 ```
